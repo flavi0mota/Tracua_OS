@@ -9,6 +9,8 @@
 
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
+
+// Changed to this address because of the logic of high half kernels
 static uint16_t* const VGA_MEMORY = (uint16_t*) 0xC03FF000;
 
 static size_t terminal_row;
@@ -42,6 +44,7 @@ void terminal_putchar(char c) {
 	unsigned char uc = c;
 	unsigned char newline = '\n';
 	
+  //handling special characters, will eventually handle others, especially of my own language
 	if (uc == newline) {
 		terminal_column = 0;
 		if (++terminal_row == VGA_HEIGHT) {

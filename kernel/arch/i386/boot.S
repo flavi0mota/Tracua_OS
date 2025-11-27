@@ -111,6 +111,20 @@ _start:
 	# Set up the stack.
 	mov $stack_top, %esp
 
+	# flush do gdt
+	lgdt gdt_descriptor
+
+	# lógica dos dados do eax
+	mov $0x10, %ax
+	mov %ax, %ds
+	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
+	mov %ax, %ss
+
+	ljmp $0x08, $.flush_cs
+
+.flush_cs:
 	# Enter the high-level kernel.
 	call kernel_main
 
@@ -118,3 +132,33 @@ _start:
 	cli
 1:	hlt
 	jmp 1b
+
+.section .data
+.align 4
+
+gdt_start:
+	# null descriptor lá das osdev
+	.quad 0
+
+	.word 0xFFFF
+	.word 0x0000
+	.byte 0x00
+	.byte 0x9A
+	.byte 0xCF # flags
+	.byte 0x00
+
+	# gdt do kernel principal
+
+	.word 0xFFFF
+	.word 0x0000
+	.byte 0x00
+	.byte 0x92
+	.byte 0xCF
+	.byte 0x00
+
+gdt_end:
+
+# estrutura de dados
+gdt_descriptor:
+	.word gdt_end - gdt_start - 1 # calculozinho
+	.long gdt_start

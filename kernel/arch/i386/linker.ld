@@ -1,5 +1,5 @@
 ENTRY (_start)
-
+/* não esquecer de modificar a seção data aqui */
 SECTIONS
 {
         . = 0x00100000;

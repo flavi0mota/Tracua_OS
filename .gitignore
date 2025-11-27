@@ -1,3 +1,5 @@
 *.iso
 sysroot/
 isodir/
+compile_commands.json
+.cache
